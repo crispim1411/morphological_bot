@@ -21,20 +21,19 @@ pub mod morphology {
         class: String,
     }
 
+    const REQUEST_URL: &str = "https://labs.goo.ne.jp/api/morph";
+
     pub async fn get_parts(phrase: String) -> Result<Vec<Morpheme>, Error> {
         let api_id = env::var("JAP_TOKEN").unwrap_or("".to_string());
-
-        let request_url = format!("https://labs.goo.ne.jp/api/morph");
-
         let params = Request {
             app_id: api_id,
             sentence: phrase,
-            info_filter: String::from("form|pos|read")
+            info_filter: String::from("form|pos")
         };
 
         let client = reqwest::Client::new();
         let response = client
-            .post(&request_url)
+            .post(REQUEST_URL)
             .form(&params)
             .send()
             .await?;
@@ -45,6 +44,7 @@ pub mod morphology {
             .flatten()
             .map(|item| Morpheme { word: item[0].clone(), class: item[1].clone()})
             .collect();
+            
         Ok(result)
     }
 }
