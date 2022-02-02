@@ -1,5 +1,5 @@
 use teloxide::prelude::*;
-
+// lib.rs
 use bot::morphology;
 
 #[tokio::main]
@@ -13,7 +13,7 @@ pub async fn run() {
 
     let bot = Bot::from_env().auto_send();
 
-    teloxide::repl(bot, move |message| async move {
+    teloxide::repl(bot, |message| async move {
         let phrase = message.update.text().unwrap().to_string();
 
         match morphology::get_parts(phrase).await {
